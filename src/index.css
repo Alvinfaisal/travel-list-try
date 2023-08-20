@@ -64,7 +64,7 @@ h1 {
   top: 40px;
 }
 
-.form button,
+button,
 select,
 input {
   background-color: #faf0e6;
@@ -95,9 +95,15 @@ button:active {
 
 .packing {
   grid-column: span 12;
+}
+
+.packing-list {
   display: grid;
   grid-template-columns: repeat(6, 1fr);
-  grid-template-rows: 5rem 5rem 5rem 5rem;
+  grid-template-rows: 4rem 4rem 4rem 4rem 2rem;
+  padding-top: 10px;
+  padding-left: 10px;
+  padding-right: 10px;
 }
 
 .pack-item {
@@ -106,12 +112,29 @@ button:active {
   justify-content: center;
   column-gap: 10px;
   row-gap: 15px;
+  background-color: #352f44;
+  border: 3px solid #b9b4c7;
+  border-radius: 25px;
+  padding: 10px 15px;
+  text-transform: capitalize;
+}
+
+.pack-item button {
+  background-color: #352f44;
+  border-radius: 10px;
+  padding: 5px;
+}
+
+.select-sort {
+  margin-left: 2rem;
+  margin-right: 1rem;
 }
 
 .stats {
   grid-column: span 12;
   font-family: "Rajdhani", sans-serif;
   text-align: center;
-  font-weight: 700;
-  padding: 3.2rem 0;
+  font-size: 20px;
+  font-style: normal;
+  padding: 2rem 0;
 }
