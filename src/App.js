@@ -27,6 +27,11 @@ function App() {
     setItems((items) => items.filter((item) => item.id !== id));
   }
 
+  function handleResetItems() {
+    window.confirm("Remove all items?");
+    setItems([]);
+  }
+
   return (
     <div className="container">
       <Logo />
@@ -37,6 +42,7 @@ function App() {
         items={items}
         onUpdateItem={handleUpdateItem}
         onDeleteItem={handleRemoveItem}
+        onResetItem={handleResetItems}
       />
 
       <Stats />
@@ -79,7 +85,7 @@ function Form({ items, onAddItem }) {
       packed: false,
     };
 
-    if (items.length >= 3) {
+    if (items.length >= 6) {
       setQuantity(1);
       setName("");
       window.confirm("Telah mencapai batas");
@@ -115,12 +121,31 @@ function Form({ items, onAddItem }) {
 }
 
 // Component PackingList
-function PackingList({ items, onUpdateItem, onDeleteItem }) {
+function PackingList({ items, onUpdateItem, onDeleteItem, onResetItem }) {
+  const [sortBy, setSortby] = useState("sort-input");
+
+  function handleSelectsort(event) {
+    setSortby(event.target.value);
+  }
+
+  let sortItems;
+
+  if (sortBy === "sort-input") {
+    sortItems = items;
+  } else if (sortBy === "sort-title") {
+    sortItems = items.slice().sort((a, b) => a.name.localeCompare(b.name));
+  } else if (sortBy === "sort-packed") {
+    sortItems = items
+      .slice()
+      .sort((a, b) => Number(a.packed) - Number(b.packed));
+  } else if (sortBy === "sort-quantity") {
+    sortItems = items.slice().sort((a, b) => a.quantity - b.quantity);
+  }
   return (
     <React.Fragment>
       <div className="item packing">
         <div className="packing-list">
-          {items.map((item) => (
+          {sortItems.map((item) => (
             <Item
               items={item}
               key={item.id}
@@ -130,12 +155,19 @@ function PackingList({ items, onUpdateItem, onDeleteItem }) {
           ))}
         </div>
 
-        <select className="select-sort">
-          <option>Sort by Input</option>
-          <option>Sort by Title</option>
-          <option>Sort by Packed</option>
+        <select
+          className="select-sort"
+          value={sortBy}
+          onChange={handleSelectsort}
+        >
+          <option value="sort-input">Sort by Input</option>
+          <option value="sort-title">Sort by Title</option>
+          <option value="sort-packed">Sort by Packed</option>
+          <option value="sort-quantity">Sort by Quantity</option>
         </select>
-        <button className="btn-reset">RESET</button>
+        <button className="btn-reset" onClick={onResetItem}>
+          RESET
+        </button>
       </div>
     </React.Fragment>
   );
@@ -155,7 +187,7 @@ function Item({ items, onUpdateItem, onDeleteItem }) {
             items.packed ? { color: "red", textDecoration: "line-through" } : {}
           }
         >
-          {items.quantity} {items.name}
+          {items.quantity} - {items.name}
         </span>
         <button onClick={() => onDeleteItem(items.id)}>❌</button>
       </li>
