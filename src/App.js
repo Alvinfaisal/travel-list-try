@@ -45,7 +45,7 @@ function App() {
         onResetItem={handleResetItems}
       />
 
-      <Stats />
+      <Stats items={items} />
     </div>
   );
 }
@@ -85,7 +85,7 @@ function Form({ items, onAddItem }) {
       packed: false,
     };
 
-    if (items.length >= 6) {
+    if (items.length >= 16) {
       setQuantity(1);
       setName("");
       window.confirm("Telah mencapai batas");
@@ -112,6 +112,7 @@ function Form({ items, onAddItem }) {
           type="text"
           placeholder="Item..."
           value={name}
+          maxLength={20}
           onChange={handleNameInput}
         />
         <button>ADD</button>
@@ -196,11 +197,27 @@ function Item({ items, onUpdateItem, onDeleteItem }) {
 }
 
 // Component Stats
-function Stats() {
+function Stats({ items }) {
+  const numItems = items.length;
+  const numItemsPacked = items.filter((item) => item.packed === true).length;
+  const numPercentage = +((numItemsPacked / numItems) * 100).toFixed();
+  // console.log(typeof numPercentage);
+
   return (
     <React.Fragment>
       <div className="item stats">
-        You have X on your list, and you already packed X (X%)
+        {numPercentage === 100 && (
+          <em>You got everything! Ready to your happiness 🐧</em>
+        )}
+
+        {numPercentage !== 100 && numPercentage !== 0 && (
+          <em>
+            You have {numItems} on your list, and you already packed{" "}
+            {numItemsPacked} ( {numItems === 0 ? 0 : numPercentage} %){" "}
+          </em>
+        )}
+
+        {numPercentage === 0 && <em>Pack your items right now please 😢!!</em>}
       </div>
     </React.Fragment>
   );
